@@ -1,0 +1,67 @@
+﻿<Window x:Class="TaskManager.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TaskManager"
+        mc:Ignorable="d"
+        Title="Task Manager" Height="450" Width="800">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Панель создания новой задачи -->
+        <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="10">
+            <!-- Поле ввода для названия задачи -->
+            <Grid>
+                <TextBox Name="TaskTitleTextBox" Width="200" Padding="5" TextChanged="TaskTitleTextBox_TextChanged"/>
+                <TextBlock Name="TaskTitlePlaceholder" Text="Введите название задачи" 
+                           Foreground="Gray" Margin="5,0,0,0" 
+                           IsHitTestVisible="False" VerticalAlignment="Center"/>
+            </Grid>
+
+            <!-- Кнопки -->
+            <Button Name="AddTaskButton" Content="Добавить задачу" Width="150" Margin="10,0,0,0" Click="AddTaskButton_Click"/>
+            <Button Name="DeleteTaskButton" Content="Удалить задачу" Width="150" Margin="10,0,0,0" Click="DeleteTaskButton_Click" IsEnabled="False"/>
+        </StackPanel>
+
+        <!-- Список задач -->
+        <ListBox Name="TasksListBox" Grid.Row="1" Margin="10" HorizontalContentAlignment="Stretch" 
+                 SelectionChanged="TasksListBox_SelectionChanged">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Border BorderBrush="Gray" BorderThickness="1" Padding="10" Margin="5">
+                        <StackPanel>
+                            <!-- Название задачи -->
+                            <TextBlock Text="{Binding Title}" FontWeight="Bold" FontSize="16"/>
+                            <!-- Отметка выполнения -->
+                            <CheckBox Content="Выполнено" IsChecked="{Binding IsCompleted}"/>
+
+                            <!-- Список подзадач -->
+                            <ListBox ItemsSource="{Binding SubTasks}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding Title}" Margin="5"/>
+                                            <CheckBox IsChecked="{Binding IsCompleted}" Content="Выполнено" Margin="10,0,0,0"/>
+                                            <Button Content="Удалить" Click="DeleteSubTaskButton_Click" Tag="{Binding}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+
+                            <!-- Панель для добавления подзадач -->
+                            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                                <TextBox Width="150" Name="SubTaskTitleTextBox" Padding="5" />
+                                <Button Content="Добавить подзадачу" Width="150" Margin="10,0,0,0" Click="AddSubTaskButton_Click" Tag="{Binding}"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </Grid>
+</Window>
